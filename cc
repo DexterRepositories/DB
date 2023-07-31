@@ -4,7 +4,7 @@
 #USER='teamkidl_maxlite2';
 #PASS='jan022011';
 #DBNAME='teamkidl_maxlite2';
-rm -rf cpanel3_aio_premium*
+rm -rf cpanel3_aio_private*
 PORT_TCP='1194';
 PORT_UDP='53';
 
@@ -205,11 +205,11 @@ sed -i "s|PORT_TCP|$PORT_TCP|g" /etc/openvpn/server2.conf
 
 wget -O /etc/openvpn/login/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
 
-wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/premium.sh"
+wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/private.sh"
 
 wget -O /etc/openvpn/login/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/connect.sh"
 
-sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.sh
+sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.s
 
 wget -O /etc/openvpn/login/disconnect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/disconnect.sh"
 
@@ -523,25 +523,9 @@ echo 'Installing hysteria.'
 {
 wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubusercontent.com/DexterRepositories/Hysteria/main/install_server.sh; chmod +x ~/install_server.sh; ./install_server.sh
 
-rm -f /etc/hysteria/config.json
+mkdir -p /etc/hysteria
 
-echo '{
-  "listen": ":5666",
-  "cert": "/etc/hysteria/server.crt",
-  "key": "/etc/hysteria/server.key",
-  "up_mbps": 100,
-  "down_mbps": 100,
-  "disable_udp": false,
-  "obfs": "dex",
-  "auth": {
-    "mode": "external",
-    "config": {
-    "cmd": "./.auth.sh"
-    }
-  },
-  "prometheus_listen": ":5665",
-}
-' >> /etc/hysteria/config.json
+wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/mtkaiolite"
 
 
 cat <<"EOM" >/etc/hysteria/.auth.sh
@@ -565,10 +549,11 @@ USERNAME=$(echo "$AUTH" | cut -d ":" -f 1)
 PASSWORD=$(echo "$AUTH" | cut -d ":" -f 2)
 
 
-Query="SELECT user_name FROM users WHERE user_name='$USERNAME' AND auth_vpn=md5('$PASSWORD') AND status='live' AND is_freeze=0 AND is_ban=0 AND private_duration > 0"
+Query="SELECT user_name FROM users WHERE user_name='$USERNAME' AND auth_vpn=md5('$PASSWORD') AND status='live' AND is_freeze=0 AND is_ban=0 AND (duration > 0 OR vip_duration > 0 OR private_duration > 0)"
 user_name=`mysql -u $USER -p$PASS -D $DB -h $HOST -sN -e "$Query"`
 [ "$user_name" != '' ] && [ "$user_name" = "$USERNAME" ] && echo "user : $username" && echo 'authentication ok.' && exit 0 || echo 'authentication failed.'; exit 1
 EOM
+
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/.auth.sh
 
@@ -586,10 +571,13 @@ rm -rf install_server.sh*
 
 
 online() {
+
+
 cat <<\EOM >/etc/hysteria/online.sh
 #!/bin/bash
 . /etc/hysteria/config.sh
 serverip=SERVERIP
+
 
 tcpusers=$(sed -n -e "/^ROUTING_TABLE/p" /etc/openvpn/server/tcpclient.log | wc -l)
 udpusers=$(sed -n -e "/^ROUTING_TABLE/p" /etc/openvpn/server/udpclient.log | wc -l)
@@ -600,9 +588,12 @@ hysteria_udpz=$(cat /etc/hysteria/logs | grep -w 'hysteria_active_conn{auth=' | 
 hysteriausers=$(echo "$hysteria_udpz" | grep '[^[:space:]]' | wc -l)
 
 mysql -u $USER -p$PASS -D $DB -h $HOST -e "UPDATE server_list SET online='$total', hysteria_online='$hysteriausers' WHERE server_ip='$serverip' "
+
 EOM
 
 sed -i "s|SERVERIP|$server_ip|g" /etc/hysteria/online.sh
+
+
 
 cat <<\EOM >/etc/hysteria/ws.sh
 #!/bin/bash
@@ -914,7 +905,14 @@ sKKWTJk08giHse+yqTKQ05uR
 -----END PRIVATE KEY-----
 EOF
 
-wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
+
+cat <<\EOM >/etc/hysteria/config.sh
+#!/bin/bash
+HOST='185.61.137.174'
+USER='firenetv_mtk'
+PASS='@@@@F1r3n3t'
+DB='firenetv_mtk'
+EOM
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/server.crt
@@ -1037,7 +1035,7 @@ echo '++++++++++++++++++++++++++++++++++'
 echo '*       AIO  is ready!    *'
 echo '+++++++++++************+++++++++++'
 echo -e "[IP] : $server_ip\n[Openvpn TCP Port] : $PORT_TCP\n[Openvpn UDP Port] : $PORT_UDP\n[Ssl Port] : 443\n[Proxy Socks ] : 80\n[Hysteria Port ] : 5666\n[Proxy Squid 1] : 8080\n[Proxy Squid 2] : 3128\n"
-rm -rf cpanel3_aio_premium
+rm -rf cpanel3_aio_private
 rm -rf install_server.sh
 netstat -tpln
 ln -sf /dev/null ~/.bash_history
