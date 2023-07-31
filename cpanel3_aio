@@ -205,9 +205,7 @@ sed -i "s|PORT_TCP|$PORT_TCP|g" /etc/openvpn/server2.conf
 
 wget -O /etc/openvpn/login/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
 
-
-wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRepositories/DB/main/auth_vpn.sh"
-
+wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/premium.sh"
 
 wget -O /etc/openvpn/login/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/connect.sh"
 
@@ -216,6 +214,8 @@ sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.s
 wget -O /etc/openvpn/login/disconnect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/disconnect.sh"
 
 sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/disconnect.sh
+
+wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
 
 cat << EOF > /etc/openvpn/easy-rsa/keys/ca.crt
 -----BEGIN CERTIFICATE-----
@@ -530,30 +530,7 @@ mkdir -p /etc/hysteria
 wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/PiercingDoll/ScriptFile/main/mtkaiolite/config"
 
 
-cat <<"EOM" >/etc/hysteria/.auth.sh
-#!/bin/bash
-. /etc/hysteria/config.sh
-
-if [ $# -ne 4 ]; then
-    echo "invalid number of arguments"
-    exit 1
-fi
-
-ADDR=$1
-AUTH=$2
-SEND=$3
-RECV=$4
-
-USERNAME=$(echo "$AUTH" | cut -d ":" -f 1)
-PASSWORD=$(echo "$AUTH" | cut -d ":" -f 2)
-
-USERNAME=$(echo "$AUTH" | cut -d ":" -f 1)
-PASSWORD=$(echo "$AUTH" | cut -d ":" -f 2)
-
-Query="SELECT user_name FROM users WHERE user_name='$USERNAME' AND auth_vpn=md5('$PASSWORD') AND status='live' AND is_freeze=0 AND is_ban=0 AND (duration > 0 OR vip_duration > 0 OR private_duration > 0)"
-user_name=`mysql -u $USER -p$PASS -D $DB -h $HOST -sN -e "$Query"`
-[ "$user_name" != '' ] && [ "$user_name" = "$USERNAME" ] && echo "user : $username" && echo 'authentication ok.' && exit 0 || echo 'authentication failed.'; exit 1
-EOM
+wget -O /etc/hysteria/.auth.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/hysteria.sh"
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/.auth.sh
@@ -905,15 +882,6 @@ o4CmMhs3Wlw5FiOru1LxQY//65wi5q8+rNF4DR3oUKoVGb1PD3Gm8ZsxirhMOCrc
 sKKWTJk08giHse+yqTKQ05uR
 -----END PRIVATE KEY-----
 EOF
-
-
-cat <<\EOM >/etc/hysteria/config.sh
-#!/bin/bash
-HOST='185.61.137.174'
-USER='firenetv_mtk'
-PASS='@@@@F1r3n3t'
-DB='firenetv_mtk'
-EOM
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/server.crt
