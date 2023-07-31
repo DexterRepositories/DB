@@ -523,12 +523,52 @@ echo 'Installing hysteria.'
 {
 wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubusercontent.com/DexterRepositories/Hysteria/main/install_server.sh; chmod +x ~/install_server.sh; ./install_server.sh
 
-mkdir -p /etc/hysteria
+rm -f /etc/hysteria/config.json
 
-wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/mtkaiolite"
+echo '{
+  "listen": ":5666",
+  "cert": "/etc/hysteria/server.crt",
+  "key": "/etc/hysteria/server.key",
+  "up_mbps": 100,
+  "down_mbps": 100,
+  "disable_udp": false,
+  "obfs": "dex",
+  "auth": {
+    "mode": "external",
+    "config": {
+    "cmd": "./.auth.sh"
+    }
+  },
+  "prometheus_listen": ":5665",
+}
+' >> /etc/hysteria/config.json
 
-wget -O /etc/hysteria/.auth.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/hysteria.sh"
 
+cat <<"EOM" >/etc/hysteria/.auth.sh
+#!/bin/bash
+. /etc/hysteria/config.sh
+
+if [ $# -ne 4 ]; then
+    echo "invalid number of arguments"
+    exit 1
+fi
+
+ADDR=$1
+AUTH=$2
+SEND=$3
+RECV=$4
+
+USERNAME=$(echo "$AUTH" | cut -d ":" -f 1)
+PASSWORD=$(echo "$AUTH" | cut -d ":" -f 2)
+
+USERNAME=$(echo "$AUTH" | cut -d ":" -f 1)
+PASSWORD=$(echo "$AUTH" | cut -d ":" -f 2)
+
+
+Query="SELECT user_name FROM users WHERE user_name='$USERNAME' AND auth_vpn=md5('$PASSWORD') AND status='live' AND is_freeze=0 AND is_ban=0 AND private_duration > 0"
+user_name=`mysql -u $USER -p$PASS -D $DB -h $HOST -sN -e "$Query"`
+[ "$user_name" != '' ] && [ "$user_name" = "$USERNAME" ] && echo "user : $username" && echo 'authentication ok.' && exit 0 || echo 'authentication failed.'; exit 1
+EOM
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/.auth.sh
 
