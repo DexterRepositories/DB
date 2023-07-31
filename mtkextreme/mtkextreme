@@ -7,10 +7,7 @@
   "disable_udp": false,
   "obfs": "dex",
   "auth": {
-    "mode": "external",
-    "config": {
-    "cmd": "./.auth.sh"
-    }
-  },
-  "prometheus_listen": ":5665",
+    "mode": "passwords",
+    "config": ["mtkvpn"]
+  }
 }
