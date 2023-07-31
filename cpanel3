@@ -215,8 +215,6 @@ wget -O /etc/openvpn/login/disconnect.sh "https://raw.githubusercontent.com/Dext
 
 sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/disconnect.sh
 
-wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
-
 cat << EOF > /etc/openvpn/easy-rsa/keys/ca.crt
 -----BEGIN CERTIFICATE-----
 MIIFBDCCA+ygAwIBAgIUUmdgPaIpFzVfyrlKjuKAdPPOZOswDQYJKoZIhvcNAQEL
@@ -882,6 +880,8 @@ o4CmMhs3Wlw5FiOru1LxQY//65wi5q8+rNF4DR3oUKoVGb1PD3Gm8ZsxirhMOCrc
 sKKWTJk08giHse+yqTKQ05uR
 -----END PRIVATE KEY-----
 EOF
+
+wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/server.crt
