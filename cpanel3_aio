@@ -527,7 +527,7 @@ wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubuserc
 
 mkdir -p /etc/hysteria
 
-wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/PiercingDoll/ScriptFile/main/mtkaiolite/config"
+wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/mtkaiolite"
 
 
 wget -O /etc/hysteria/.auth.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/hysteria.sh"
