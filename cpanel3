@@ -546,13 +546,10 @@ rm -rf install_server.sh*
 
 
 online() {
-
-
 cat <<\EOM >/etc/hysteria/online.sh
 #!/bin/bash
 . /etc/hysteria/config.sh
 serverip=SERVERIP
-
 
 tcpusers=$(sed -n -e "/^ROUTING_TABLE/p" /etc/openvpn/server/tcpclient.log | wc -l)
 udpusers=$(sed -n -e "/^ROUTING_TABLE/p" /etc/openvpn/server/udpclient.log | wc -l)
@@ -563,12 +560,9 @@ hysteria_udpz=$(cat /etc/hysteria/logs | grep -w 'hysteria_active_conn{auth=' | 
 hysteriausers=$(echo "$hysteria_udpz" | grep '[^[:space:]]' | wc -l)
 
 mysql -u $USER -p$PASS -D $DB -h $HOST -e "UPDATE server_list SET online='$total', hysteria_online='$hysteriausers' WHERE server_ip='$serverip' "
-
 EOM
 
 sed -i "s|SERVERIP|$server_ip|g" /etc/hysteria/online.sh
-
-
 
 cat <<\EOM >/etc/hysteria/ws.sh
 #!/bin/bash
