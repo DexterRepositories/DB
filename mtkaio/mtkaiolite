@@ -11,5 +11,6 @@
     "config": {
     "cmd": "./.auth.sh"
     }
-  }, 
+  },
+  "prometheus_listen": ":5665",
 }
