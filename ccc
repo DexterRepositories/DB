@@ -209,7 +209,7 @@ wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRep
 
 wget -O /etc/openvpn/login/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/connect.sh"
 
-sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.s
+sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.sh
 
 wget -O /etc/openvpn/login/disconnect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/disconnect.sh"
 
@@ -904,15 +904,8 @@ o4CmMhs3Wlw5FiOru1LxQY//65wi5q8+rNF4DR3oUKoVGb1PD3Gm8ZsxirhMOCrc
 sKKWTJk08giHse+yqTKQ05uR
 -----END PRIVATE KEY-----
 EOF
-
-
-cat <<\EOM >/etc/hysteria/config.sh
-#!/bin/bash
-HOST='185.61.137.174'
-USER='firenetv_mtk'
-PASS='@@@@F1r3n3t'
-DB='firenetv_mtk'
-EOM
+    
+wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/server.crt
