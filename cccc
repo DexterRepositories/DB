@@ -905,7 +905,7 @@ sKKWTJk08giHse+yqTKQ05uR
 -----END PRIVATE KEY-----
 EOF
     
-wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh
+wget -O /etc/hysteria/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/config.sh"
 
 chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/server.crt
