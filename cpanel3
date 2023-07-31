@@ -209,7 +209,7 @@ wget -O /etc/openvpn/login/auth_vpn "https://raw.githubusercontent.com/DexterRep
 
 wget -O /etc/openvpn/login/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/connect.sh"
 
-sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.s
+sed -i "s|SERVER_IP|$server_ip|g" /etc/openvpn/login/connect.sh
 
 wget -O /etc/openvpn/login/disconnect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/disconnect.sh"
 
@@ -526,7 +526,6 @@ wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubuserc
 mkdir -p /etc/hysteria
 
 wget -O /etc/hysteria/config.json "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/mtkaiolite"
-
 
 wget -O /etc/hysteria/.auth.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/mtkaio/hysteria.sh"
 
