@@ -1,0 +1,5 @@
+#!/bin/bash
+HOST='mysql2.blazingfast.io'
+USER='vpnngpin_pinoyudp2023'
+PASS='pinoy2023@'
+DB='vpnngpin_pinoyudp2023'
