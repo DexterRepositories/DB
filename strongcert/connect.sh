@@ -1,5 +1,5 @@
 #!/bin/bash
-. /etc/openvpn/login/config.sh
+. /etc/openvpn/script/config.sh
 tm="$(date +%s)"
 dt="$(date +'%Y-%m-%d %H:%M:%S')"
 timestamp="$(date +'%FT%TZ')"
