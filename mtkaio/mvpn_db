@@ -1,0 +1,5 @@
+#!/bin/bash
+HOST='185.61.137.174'
+USER='firenetv_mvpn'
+PASS='F1005r90@'
+DB='firenetv_mvpn'
