@@ -428,7 +428,7 @@ grub-set-default 0
 echo "tcp_bbr" >> /etc/modules-load.d/modules.conf
 INSTALL_BBR=true
 
-sysctl -e -p
+sysctl -p
 
 iptables -F
 iptables -t nat -A PREROUTING -p udp --dport 20000:50000 -j DNAT --to-destination :5666
