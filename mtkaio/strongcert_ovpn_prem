@@ -278,7 +278,7 @@ EOM
 
 wget -O /etc/openvpn/script/config.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/config"
 
-wget -O /etc/openvpn/script/authvpn.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/premium1.sh"
+wget -O /etc/openvpn/script/authvpn.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/prem.sh"
 
 wget -O /etc/openvpn/script/connect.sh "https://raw.githubusercontent.com/DexterRepositories/DB/main/strongcert/connect.sh"
 
