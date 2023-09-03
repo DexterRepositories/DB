@@ -1,0 +1,5 @@
+#!/bin/bash
+HOST='185.61.137.174'
+USER='dragonzx_dragonzpanel'
+PASS='paneldragonz@'
+DB='dragonzx_dragonzpanel'
