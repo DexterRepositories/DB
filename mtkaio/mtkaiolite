@@ -3,7 +3,7 @@
   "cert": "/etc/hysteria/server.crt",
   "key": "/etc/hysteria/server.key",
   "up_mbps": 100,
-  "down_mbps": 100,
+  "down_mbps": 200,
   "disable_udp": false,
   "obfs": "dex",
   "auth": {
