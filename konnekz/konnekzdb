@@ -1,1 +1,5 @@
-adfad
+#!/bin/bash
+HOST='185.61.137.174'
+USER='firenetv_konnekz'
+PASS='F1005r90@'
+DB='firenetv_konnekz'
