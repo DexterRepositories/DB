@@ -1,0 +1,5 @@
+#!/bin/bash
+HOST='66.45.251.234'
+USER='systemte_marketing-user'
+PASS='soldier062185'
+DB='systemte_marketing-user'
