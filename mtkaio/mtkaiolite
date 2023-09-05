@@ -13,4 +13,6 @@
     }
   },
   "prometheus_listen": ":5665",
+  "recv_window_conn": 107374182400,
+  "recv_window_client": 13421772800
 }
